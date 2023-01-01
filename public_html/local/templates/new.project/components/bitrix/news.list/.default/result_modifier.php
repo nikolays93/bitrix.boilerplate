@@ -212,11 +212,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 $strSectName
             );
         },
-        // @TODO:
-        'PROPERTIES' => call_user_func(function() use ($arParams, $arItem) {
-            $properties = array();
-            return $properties;
-        }),
     );
 
     /**
@@ -245,16 +240,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 $arItem['LINK_ATTRS']
             );
     }
-}
-
-$sort = array_flip( $arParams['SORT_ELEMENTS'] );
-
-foreach ($arResult["ITEMS"] as &$arItem) {
-    $arItem['VAR']['SHOW_ELEMENTS'] = function() use ($sort, $arItem) {
-        foreach ($sort as $elem) {
-            if (isset($arItem['VAR'][$elem])) echo $arItem['VAR'][$elem];
-        }
-    };
 }
 
 /**

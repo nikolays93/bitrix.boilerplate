@@ -80,19 +80,6 @@ $arTemplateParameters = array(
         "TYPE"    => "CHECKBOX",
         "DEFAULT" => "N",
     ),
-    "THUMBNAIL_POSITION" => Array(
-        "PARENT"  => "VISUAL",
-        "NAME"    => "Расположение изображения",
-        "TYPE"    => "LIST",
-        "DEFAULT" => "",
-        "VALUES"  => array(
-            ""        => "По умолчанию",
-            "LEFT"    => "Слева",
-            "RIGHT"   => "Справа",
-            "FLOAT_L" => "Обтекание слева",
-            "FLOAT_R" => "Обтекание справа",
-        )
-    ),
     "SORT_ELEMENTS"      => Array(
         "PARENT"  => "VISUAL",
         "NAME"    => 'Расположение элементов',

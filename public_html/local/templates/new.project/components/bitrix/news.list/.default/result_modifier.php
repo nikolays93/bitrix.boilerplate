@@ -91,27 +91,15 @@ foreach ($arResult["ITEMS"] as &$arItem) {
             $strPict = '';
             $strPictURL = isset($arParams['PICTURE_URL']) && "DETAIL_PICTURE" === $arParams['PICTURE_URL'] ?
                 htmlspecialcharsEx($arItem["DETAIL_PICTURE"]["SRC"]) : $arItem['DETAIL_PAGE_URL'];
-            $strPictClass = htmlspecialcharsEx($arParams['ITEM_CLASS']) . '__pict';
-            switch ($arParams['THUMBNAIL_POSITION']) {
-                case 'RIGHT':
-                case 'FLOAT_R':
-                    $strPictClass = 'alignright ' . $strPictClass;
-                    break;
 
-                case 'LEFT':
-                case 'FLOAT_L':
-                    $strPictClass = 'alignleft ' . $strPictClass;
-                    break;
-            }
-
-            if ( ! empty($arItem["PREVIEW_PICTURE"]["SRC"])) {
+            if (!empty($arItem["PREVIEW_PICTURE"]["SRC"])) {
                 // create img element
                 $strPict = sprintf('<img src="%s" alt="%s">',
                     htmlspecialcharsEx($arItem["PREVIEW_PICTURE"]["SRC"]),
                     htmlspecialcharsEx($arItem["NAME"])
                 );
 
-                if( strlen($strPictURL) > 2 ) {
+                if (strlen($strPictURL) > 2) {
                     // wrap to link
                     $strPict = sprintf('<a href="%s"%s>%s</a>',
                         $strPictURL,
@@ -123,7 +111,7 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
             // wrap to module box
             return sprintf('<div class="%s">%s</div>',
-                $strPictClass,
+                htmlspecialcharsEx($arParams['ITEM_CLASS']) . '__pict',
                 $strPict
             );
         },

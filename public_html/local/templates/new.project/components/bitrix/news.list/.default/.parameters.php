@@ -38,15 +38,6 @@ while ($arProp = $resProperties->getNext()) {
     }
 }
 
-$sortElements = array_merge($arProperties, array(
-    'PICT' => 'Изображение',
-    'NAME' => 'Название',
-    'DESC' => 'Описание',
-    'MORE' => 'Подробнее',
-    'DATE' => 'Дата',
-    'SECT' => 'Название секции',
-));
-
 $arTemplateParameters = array(
     "PARENT_SECTION"              => array(
         "PARENT"  => "DATA_SOURCE",
@@ -79,15 +70,6 @@ $arTemplateParameters = array(
         "NAME"    => GetMessage("T_IBLOCK_DESC_NEWS_PICTURE_DETAIL_URL"),
         "TYPE"    => "CHECKBOX",
         "DEFAULT" => "N",
-    ),
-    "SORT_ELEMENTS"      => Array(
-        "PARENT"  => "VISUAL",
-        "NAME"    => 'Расположение элементов',
-        "TYPE"    => "CUSTOM",
-        "DEFAULT" => "PICT,NAME,DESC,MORE",
-        "JS_FILE" => "/local/templates/new.project/assets/dragdrop_order/script.js",
-        'JS_EVENT' => 'initDraggableOrderControl',
-        'JS_DATA'  => Json::encode($sortElements),
     ),
     "NAME_TAG"           => Array(
         "NAME"    => GetMessage("T_IBLOCK_DESC_NEWS_NAME_TAG"),
@@ -125,18 +107,4 @@ $arTemplateParameters = array(
         "TYPE"    => "CHECKBOX",
         "DEFAULT" => "N",
     ),
-
-    /**
-     * @todo
-     * /
-     * "EXTERNAL_LINK_PROPERTY" => Array(
-     * "NAME" => GetMessage("T_IBLOCK_DESC_NEWS_EXTERNAL_LINK_PROPERTY"),
-     * "TYPE" => "LIST",
-     * "DEFAULT" => "",
-     * ),
-     * "EXTERNAL_LINK_TEXT" => Array(
-     * "NAME" => GetMessage("T_IBLOCK_DESC_NEWS_EXTERNAL_LINK_TEXT"),
-     * "TYPE" => "LIST",
-     * "DEFAULT" => GetMessage("T_IBLOCK_VALUE_NEWS_EXTERNAL_LINK_TEXT"),
-     * ), // */
 );

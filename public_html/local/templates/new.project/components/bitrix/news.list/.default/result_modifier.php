@@ -238,12 +238,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
         );
     }
 
-    $arItem['ACTION']['BEFORE_ARTICLE_BODY'] = in_array($arParams['THUMBNAIL_POSITION'],
-        array('LEFT', 'FLOAT_L')) ? $arItem['VAR']['PICT'] : '';
-
-    $arItem['ACTION']['AFTER_ARTICLE_BODY'] = in_array($arParams['THUMBNAIL_POSITION'],
-        array('RIGHT', 'FLOAT_R')) ? $arItem['VAR']['PICT'] : '';
-
     if (strlen($arItem['DETAIL_PAGE_URL']) > 2 && $arParams['USE_GLOBAL_LINK']) {
         $arItem['ACTION']['AFTER_ARTICLE_BODY'] .= "\r\n"
           . sprintf('<a href="%s" class="global-link"%s></a>',

@@ -302,12 +302,10 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
 /**
  * Lazy load || Infinity scroll
- *
- * @fix it if is change SEO_URL
  */
-$paramName  = 'PAGEN_' . $arResult['NAV_RESULT']->NavNum;
+$paramName = 'PAGEN_' . $arResult['NAV_RESULT']->NavNum;
 $paramValue = $arResult['NAV_RESULT']->NavPageNomer;
-$pageCount  = $arResult['NAV_RESULT']->NavPageCount;
+$pageCount = $arResult['NAV_RESULT']->NavPageCount;
 
 $arResult['MORE_ITEMS_LINK'] = '';
 if ($arResult['NAV_RESULT']->NavPageCount <= 1) {
@@ -319,35 +317,4 @@ if ($arResult['NAV_RESULT']->NavPageCount <= 1) {
             array($paramName, 'LAZY_LOAD')
         )
     );
-}
-
-if ("Y" == $arParams['LAZY_LOAD'] && ! empty($_GET['LAZY_LOAD'])) {
-    $arResult['ACTION']['BEFORE_ROW'] = "<!--RestartBuffer-->";
-}
-// elseif( $arParams["DISPLAY_TOP_PAGER"] ) {
-//     $arResult['ACTION']['BEFORE_ROW'] = sprintf('<div class="%1$s_%2$s__pager %1$s_%2$__pager_top">%3$s</div>',
-//         $arParams['IBLOCK_CODE'],
-//         $arParams['ITEM_CLASS'],
-//         $arResult["NAV_STRING"]
-//     );
-// }
-
-$arResult['ACTION']['AFTER_ROW'] = '';
-if ($arParams["DISPLAY_BOTTOM_PAGER"]) {
-    $arResult['ACTION']['AFTER_ROW'] = sprintf('<div class="%1$s_%2$s__pager %1$s_%2$__pager_bottom">%3$s</div>',
-        $arParams['IBLOCK_CODE'],
-        $arParams['ITEM_CLASS'],
-        $arResult["NAV_STRING"]
-    );
-}
-
-if ($arResult['MORE_ITEMS_LINK'] && "Y" == $arParams['LAZY_LOAD']) {
-    $arResult['ACTION']['AFTER_ROW'].= '
-    <div class="ajax-pager-wrap">
-        <a class="more-items-link btn btn-red" href="'.$arResult['MORE_ITEMS_LINK'].'">больше<br> статей</a>
-    </div>';
-}
-
-if ("Y" == $arParams['LAZY_LOAD'] && ! empty($_GET['LAZY_LOAD'])) {
-    $arResult['ACTION']['AFTER_ROW'].= '<!--RestartBuffer-->';
 }

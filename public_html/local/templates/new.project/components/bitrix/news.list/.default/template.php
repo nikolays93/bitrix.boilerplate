@@ -1,7 +1,4 @@
-<? if ( ! defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
-    die();
-}
-
+<?php
 /** @var array $arParams */
 /** @var array $arResult */
 /** @global CMain $APPLICATION */
@@ -13,14 +10,30 @@
 /** @var string $templateFolder */
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
+    die();
+}
+
 $this->setFrameMode(true);
 
-extract( $arResult['VAR'] );
+extract($arResult['VAR']);
 
 ?>
 <section class='<?= $SECTION_CLASS ?>'>
-    <?= $arResult['ACTION']['BEFORE_ROW'] ?>
+    <?php
 
+    if ("Y" == $arParams['LAZY_LOAD'] && !empty($_GET['LAZY_LOAD'])) {
+        echo "<!--RestartBuffer-->";
+    }
+    // elseif( $arParams["DISPLAY_TOP_PAGER"] ) {
+    //     printf('<div class="%1$s_%2$s__pager %1$s_%2$__pager_top">%3$s</div>',
+    //         $arParams['IBLOCK_CODE'],
+    //         $arParams['ITEM_CLASS'],
+    //         $arResult["NAV_STRING"]
+    //     );
+    // }
+
+    ?>
     <div class="<?= $ROW_CLASS ?>">
         <?php foreach ($arResult["ITEMS"] as $arItem): extract($arItem['VAR']) ?>
             <div class="<?= $COLUMN_CLASS ?>" id="<?= $COLUMN_ID ?>">
@@ -42,6 +55,27 @@ extract( $arResult['VAR'] );
             </div>
         <? endforeach ?>
     </div><!-- .<?= $ROW_CLASS ?> -->
+    <?php
 
-    <?= $arResult['ACTION']['AFTER_ROW'] ?>
+    if ($arParams["DISPLAY_BOTTOM_PAGER"]) {
+        printf('<div class="%1$s_%2$s__pager %1$s_%2$__pager_bottom">%3$s</div>',
+            $arParams['IBLOCK_CODE'],
+            $arParams['ITEM_CLASS'],
+            $arResult["NAV_STRING"]
+        );
+    }
+
+    if ($arResult['MORE_ITEMS_LINK'] && "Y" == $arParams['LAZY_LOAD']) {
+        ?>
+        <div class="ajax-pager-wrap">
+            <a class="more-items-link btn btn-red" href="' . $arResult['MORE_ITEMS_LINK'] . '">Загрузить ещё</a>
+        </div>
+        <?php
+    }
+
+    if ("Y" == $arParams['LAZY_LOAD'] && !empty($_GET['LAZY_LOAD'])) {
+        echo '<!--RestartBuffer-->';
+    }
+
+    ?>
 </section>

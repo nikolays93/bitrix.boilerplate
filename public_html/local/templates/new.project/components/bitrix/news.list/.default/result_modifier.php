@@ -47,22 +47,33 @@ if ($arParams['THUMBNAIL_POSITION']) {
     unset($arParams['SORT_ELEMENTS']['PICT']);
 }
 
-// Transfer to epilogue
-if ($cp = $this->__component) {
+/**
+ * Transfer to epilogue
+ *
+ * @var CBitrixComponent $cp
+ */
+if ($cp = $this->getComponent()) {
     $cp->arResult['SECTION_CLASS'] = $arResult['SECTION_CLASS'];
-    $cp->arParams['ROW_CLASS']     = $arParams['ROW_CLASS'];
+    $cp->arParams['ROW_CLASS'] = $arParams['ROW_CLASS'];
 
     $cp->SetResultCacheKeys(array('SECTION_CLASS'));
 }
 
 foreach ($arResult["ITEMS"] as &$arItem) {
     // add edit areas
-    $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'],
-            CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
-    $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'],
+    $this->AddEditAction(
+        $arItem['ID'],
+        $arItem['EDIT_LINK'],
+        CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT")
+    );
+
+    $this->AddDeleteAction(
+        $arItem['ID'],
+        $arItem['DELETE_LINK'],
         CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array(
             "CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')
-        ));
+        )
+    );
 
     /** @var string */
     $arItem['COLUMN_CLASS'] = $arParams['ITEM_CLASS'] . '--column ' . $arParams['COLUMN_CLASS'];
@@ -71,24 +82,22 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
     /** @var string Y | N */
     $arItem["USER_HAVE_ACCESS"] = $arResult["USER_HAVE_ACCESS"];
-
     // disable access if link is empty
-    if(strlen($arItem["DETAIL_PAGE_URL"]) <= 1) {
+    if (strlen($arItem["DETAIL_PAGE_URL"]) <= 1) {
         $arItem["USER_HAVE_ACCESS"] = false;
     }
 
     $arItem['DETAIL_PAGE_URL'] = $arItem["USER_HAVE_ACCESS"] &&
-        ("N" === $arParams["HIDE_LINK_WHEN_NO_DETAIL"] || $arItem["DETAIL_TEXT"])
+    ("N" === $arParams["HIDE_LINK_WHEN_NO_DETAIL"] || $arItem["DETAIL_TEXT"])
         ? htmlspecialcharsEx($arItem["DETAIL_PAGE_URL"]) : '#';
 
     // insert link from custom property
-    if( !empty($arParams['LINK_BY_PROPERTY']) ) {
-        if( "Y" !== $arParams['USE_DETAIL_IS_PROP_EMPTY'] &&
-            empty($arItem['PROPERTIES'][ $arParams['LINK_BY_PROPERTY'] ]['VALUE']) ) {
+    if (!empty($arParams['LINK_BY_PROPERTY'])) {
+        if ("Y" !== $arParams['USE_DETAIL_IS_PROP_EMPTY'] &&
+            empty($arItem['PROPERTIES'][$arParams['LINK_BY_PROPERTY']]['VALUE'])) {
             $arItem['DETAIL_PAGE_URL'] = "#";
-        }
-        else {
-            $arItem['DETAIL_PAGE_URL'] = $arItem['PROPERTIES'][ $arParams['LINK_BY_PROPERTY'] ]['VALUE'];
+        } else {
+            $arItem['DETAIL_PAGE_URL'] = $arItem['PROPERTIES'][$arParams['LINK_BY_PROPERTY']]['VALUE'];
             $arItem['LINK_ATTRS'] .= ' target="_blank"';
             $arItem['LINK_ATTRS'] .= ' rel="nofollow"';
         }

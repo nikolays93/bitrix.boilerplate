@@ -1,0 +1,34 @@
+.form-main-register .form-group {
+  margin-bottom: 1rem;
+}
+
+.form-main-register .form-group-label {
+  margin-bottom: 0.25rem;
+}
+
+.form-main-register .form-group-tip {
+  padding: 0.25em 0;
+  font-size: 0.875em;
+  color: #808080;
+}
+
+.form-main-register .form-errors {
+  margin-bottom: 1rem;
+  color: #F00;
+}
+
+.form-main-register .form-success {
+  margin-bottom: 1rem;
+  color: #00AA00;
+}
+
+.form-main-register .captcha-field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.form-main-register .captcha-field-label img {
+  cursor: pointer;
+}

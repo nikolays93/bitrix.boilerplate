@@ -103,10 +103,10 @@ foreach ($arResult["ITEMS"] as &$arItem) {
         }
     }
 
+    $arItem['EDIT_AREA_ID'] = $this->GetEditAreaId($arItem['ID']);
+
     /** @var array HTML entities */
     $arItem['VAR'] = array(
-        'COLUMN_ID' => $this->GetEditAreaId($arItem['ID']),
-
         'COLUMN_CLASS' => $arItem['COLUMN_CLASS'],
 
         'ARTICLE_CLASS' => call_user_func(function() use ($arParams, $arItem) {

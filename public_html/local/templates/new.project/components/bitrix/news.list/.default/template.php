@@ -68,7 +68,7 @@ extract($arResult['VAR']);
     if ($arResult['MORE_ITEMS_LINK'] && "Y" == $arParams['LAZY_LOAD']) {
         ?>
         <div class="ajax-pager-wrap">
-            <a class="more-items-link btn btn-red" href="' . $arResult['MORE_ITEMS_LINK'] . '">Загрузить ещё</a>
+            <a data-more class="btn btn-primary" href="<?= $arResult['MORE_ITEMS_LINK'] ?>">Загрузить ещё</a>
         </div>
         <?php
     }

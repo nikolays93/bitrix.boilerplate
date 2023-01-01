@@ -32,12 +32,12 @@ if ("Y" == $arParams['LAZY_LOAD']):?>
                 var windowOffsetBottom = $window.scrollTop() + $window.height();
 
                 if (windowOffsetBottom > wrapperOffsetBottom && !ajaxBusy) {
-                    $('.more-items-link').trigger('click');
+                    $("[data-more]", $section).trigger('click');
                 }
             });
             <?endif?>
 
-            $(document).on('click', '.more-items-link', function (event) {
+            $section.on('click', "[data-more]", function (event) {
                 event.preventDefault();
                 ajaxBusy = true;
 

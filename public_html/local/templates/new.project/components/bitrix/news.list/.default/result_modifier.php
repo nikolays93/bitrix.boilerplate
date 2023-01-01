@@ -18,7 +18,6 @@ if ($ar_res = $res->GetNext()) $arParams['IBLOCK_CODE'] = $ar_res['CODE'];
 
 // define empty variables
 if (empty($arParams['COLUMNS'])) $arParams['COLUMNS'] = 1;
-if (empty($arParams['SORT_ELEMENTS'])) $arParams['SORT_ELEMENTS'] = 'PICT,NAME,DESC,MORE';
 $arResult['VAR']['ROW_CLASS'] = !empty($arParams['ROW_CLASS']) ? $arParams['ROW_CLASS'] : 'row';
 if (empty($arParams['ITEM_CLASS'])) $arParams['ITEM_CLASS'] = 'item';
 if (empty($arParams["NAME_TAG"])) $arParams["NAME_TAG"] = 'h3';
@@ -30,18 +29,6 @@ if ( ! empty($arParams['IBLOCK_CODE'])) $arSectionClass[] = "news-list_type_" . 
 if ( ! empty($arParams['IBLOCK_ID']))   $arSectionClass[] = "news-list_id_" . $arParams['IBLOCK_ID'];
 
 $arResult['VAR']['SECTION_CLASS'] = implode(' ', $arSectionClass);
-
-// prepare sort elements string
-$arParams['SORT_ELEMENTS'] = array_flip(array_map(function ($value) {
-    $value = function_exists('mb_strtoupper') ? mb_strtoupper($value) : strtoupper($value);
-
-    return trim($value);
-}, explode(',', $arParams['SORT_ELEMENTS'])));
-
-// insert in template on custom position
-if ($arParams['THUMBNAIL_POSITION']) {
-    unset($arParams['SORT_ELEMENTS']['PICT']);
-}
 
 /**
  * Transfer to epilogue
@@ -107,10 +94,7 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
             return $arParams['ITEM_CLASS'];
         }),
-        'PICT' => call_user_func(function() use ($arParams, &$arItem) {
-            if(!isset($arParams['SORT_ELEMENTS']['PICT'])) return '';
-            // if(!$arParams['THUMBNAIL_POSITION']) return '';
-
+        'PICT' => function() use ($arParams, &$arItem) {
             $strPict = '';
             $strPictURL = isset($arParams['PICTURE_URL']) && "DETAIL_PICTURE" === $arParams['PICTURE_URL'] ?
                 htmlspecialcharsEx($arItem["DETAIL_PICTURE"]["SRC"]) : $arItem['DETAIL_PAGE_URL'];
@@ -149,11 +133,9 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 $strPictClass,
                 $strPict
             );
-        }),
+        },
 
-        'NAME' => call_user_func(function() use ($arParams, $arItem) {
-            if( !isset($arParams['SORT_ELEMENTS']['NAME']) ) return '';
-
+        'NAME' => function() use ($arParams, $arItem) {
             $strNameClass = $arParams['ITEM_CLASS'] . '__name';
 
             if( strlen($arItem['DETAIL_PAGE_URL']) > 2 ) {
@@ -174,11 +156,9 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                     htmlspecialcharsEx($arParams['ITEM_CLASS'] . '__name')
                 );
             }
-        }),
+        },
 
-        'DATE' => call_user_func(function() use ($arParams, $arItem) {
-            if (!isset($arParams['SORT_ELEMENTS']['DATE'])) return '';
-
+        'DATE' => function() use ($arParams, $arItem) {
             $date = $arItem["DISPLAY_ACTIVE_FROM"] ? strip_tags($arItem["DISPLAY_ACTIVE_FROM"]) : '';
 
             // wrap to module box
@@ -186,11 +166,9 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 htmlspecialcharsEx($arParams['ITEM_CLASS']),
                 $date
             );
-        }),
+        },
 
-        'DESC' => call_user_func(function() use ($arParams, $arItem) {
-            if (!isset($arParams['SORT_ELEMENTS']['DESC'])) return '';
-
+        'DESC' => function() use ($arParams, $arItem) {
             $text = $arItem["PREVIEW_TEXT"] ? $arItem["PREVIEW_TEXT"] : '';
 
             // wrap to module box
@@ -198,9 +176,9 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 htmlspecialcharsEx($arParams['ITEM_CLASS']),
                 $text
             );
-        }),
+        },
         // @TODO: check element class
-        'MORE' => call_user_func(function() use ($arParams, $arItem) {
+        'MORE' => function() use ($arParams, $arItem) {
             /**
              * @todo in future
              */
@@ -210,7 +188,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
             //     $arItem['MORE_LINK_TEXT'] = 'Читать в источнике';
             // }
 
-            if( !isset($arParams['SORT_ELEMENTS']['MORE']) ) return '';
             if( empty($arItem["MORE_LINK_TEXT"]) ) return '';
             if( "Y" === $arParams["HIDE_LINK_WHEN_NO_DETAIL"] || empty($arItem["DETAIL_TEXT"]) ) return '';
 
@@ -224,10 +201,9 @@ foreach ($arResult["ITEMS"] as &$arItem) {
             }
 
             return '';
-        }),
+        },
 
-        'SECT' => call_user_func(function() use ($arParams, $arItem) {
-            if (!isset($arParams['SORT_ELEMENTS']['SECT'])) return '';
+        'SECT' => function() use ($arParams, $arItem) {
             if (empty($arItem['IBLOCK_SECTION_ID'])) return '';
 
             // Get section name by id
@@ -242,7 +218,7 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 htmlspecialcharsEx($arParams['ITEM_CLASS']),
                 $strSectName
             );
-        }),
+        },
         // @TODO:
         'PROPERTIES' => call_user_func(function() use ($arParams, $arItem) {
             $properties = array();
@@ -254,8 +230,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
      * Properties
      */
     foreach ($arItem['DISPLAY_PROPERTIES'] as $propCode => $arProperty) {
-        if(isset($arParams['SORT_ELEMENTS']['PROP_' . $propCode])) {
-
             if( is_array($arProperty['VALUE']) ) {
                 $arProperty['VALUE'] = implode(', ', $arProperty['VALUE']);
             }
@@ -269,7 +243,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
                 htmlspecialcharsEx(strtolower($propCode)),
                 $arItem["VAR"]['PROP_' . $propCode]
             );
-        }
     }
 
     $arItem['ACTION']['BEFORE_ARTICLE_BODY'] = in_array($arParams['THUMBNAIL_POSITION'],

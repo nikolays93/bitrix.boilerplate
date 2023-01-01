@@ -34,7 +34,7 @@ $this->setFrameMode(true);
     ?>
     <div class="<?= $arResult['VAR']['ROW_CLASS'] ?>">
         <?php foreach ($arResult["ITEMS"] as $arItem): ?>
-            <article class="<?= $arItem['VAR']['ARTICLE_CLASS'] ?>" id="<?= $arItem['EDIT_AREA_ID'] ?>">
+            <article class="<?= $arParams['ITEM_CLASS'] ?>" id="<?= $arItem['EDIT_AREA_ID'] ?>">
                 <?= $arItem['ACTION']['BEFORE_ARTICLE_BODY'] ?>
                 <div class="media-body <?= $arParams['ITEM_CLASS'] ?>__body">
                     <?= $arItem['VAR']['PICT']() ?>

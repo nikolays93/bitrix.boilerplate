@@ -87,13 +87,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
     /** @var array HTML entities */
     $arItem['VAR'] = array(
-        'ARTICLE_CLASS' => call_user_func(function() use ($arParams, $arItem) {
-            if(in_array($arParams['THUMBNAIL_POSITION'], array('LEFT', 'RIGHT'))) {
-                return 'media ' . $arParams['ITEM_CLASS'];
-            }
-
-            return $arParams['ITEM_CLASS'];
-        }),
         'PICT' => function() use ($arParams, &$arItem) {
             $strPict = '';
             $strPictURL = isset($arParams['PICTURE_URL']) && "DETAIL_PICTURE" === $arParams['PICTURE_URL'] ?

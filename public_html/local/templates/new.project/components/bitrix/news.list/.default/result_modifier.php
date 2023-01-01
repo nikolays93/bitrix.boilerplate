@@ -223,19 +223,19 @@ foreach ($arResult["ITEMS"] as &$arItem) {
      * Properties
      */
     foreach ($arItem['DISPLAY_PROPERTIES'] as $propCode => $arProperty) {
-            if( is_array($arProperty['VALUE']) ) {
-                $arProperty['VALUE'] = implode(', ', $arProperty['VALUE']);
-            }
+        if( is_array($arProperty['VALUE']) ) {
+            $arProperty['VALUE'] = implode(', ', $arProperty['VALUE']);
+        }
 
-            if($arItem["PREVIEW_TEXT"]) {
-                $arItem["VAR"]['PROP_' . $propCode] = $arProperty['VALUE'];
-            }
+        if($arItem["PREVIEW_TEXT"]) {
+            $arItem["VAR"]['PROP_' . $propCode] = $arProperty['VALUE'];
+        }
 
-            $arItem["VAR"]['PROP_' . $propCode] = sprintf('<div class="%1$s__prop %1$s-prop %1$s-prop__%2$s">%3$s</div>',
-                htmlspecialcharsEx($arParams['ITEM_CLASS']),
-                htmlspecialcharsEx(strtolower($propCode)),
-                $arItem["VAR"]['PROP_' . $propCode]
-            );
+        $arItem["VAR"]['PROP_' . $propCode] = sprintf('<div class="%1$s__prop %1$s-prop %1$s-prop__%2$s">%3$s</div>',
+            htmlspecialcharsEx($arParams['ITEM_CLASS']),
+            htmlspecialcharsEx(strtolower($propCode)),
+            $arItem["VAR"]['PROP_' . $propCode]
+        );
     }
 
     $arItem['ACTION']['BEFORE_ARTICLE_BODY'] = in_array($arParams['THUMBNAIL_POSITION'],

@@ -31,10 +31,6 @@ if ( ! empty($arParams['IBLOCK_ID']))   $arSectionClass[] = "news-list_id_" . $a
 
 $arResult['VAR']['SECTION_CLASS'] = implode(' ', $arSectionClass);
 
-// define item column base attributes
-$arParams['COLUMN_CLASS'] = function_exists('get_column_class') ?
-    get_column_class($arParams['COLUMNS']) : 'columns-' . $arParams['COLUMNS'];
-
 // prepare sort elements string
 $arParams['SORT_ELEMENTS'] = array_flip(array_map(function ($value) {
     $value = function_exists('mb_strtoupper') ? mb_strtoupper($value) : strtoupper($value);
@@ -75,9 +71,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
         )
     );
 
-    /** @var string */
-    $arItem['COLUMN_CLASS'] = $arParams['ITEM_CLASS'] . '--column ' . $arParams['COLUMN_CLASS'];
-
     $arItem['LINK_ATTRS'] = '';
 
     /** @var string Y | N */
@@ -107,8 +100,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
     /** @var array HTML entities */
     $arItem['VAR'] = array(
-        'COLUMN_CLASS' => $arItem['COLUMN_CLASS'],
-
         'ARTICLE_CLASS' => call_user_func(function() use ($arParams, $arItem) {
             if(in_array($arParams['THUMBNAIL_POSITION'], array('LEFT', 'RIGHT'))) {
                 return 'media ' . $arParams['ITEM_CLASS'];
@@ -116,7 +107,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
             return $arParams['ITEM_CLASS'];
         }),
-        // @var array &$arItem change COLUMN_CLASS if picture is exists
         'PICT' => call_user_func(function() use ($arParams, &$arItem) {
             if(!isset($arParams['SORT_ELEMENTS']['PICT'])) return '';
             // if(!$arParams['THUMBNAIL_POSITION']) return '';
@@ -138,8 +128,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
             }
 
             if ( ! empty($arItem["PREVIEW_PICTURE"]["SRC"])) {
-                $arItem['COLUMN_CLASS'] .= ' has-picture';
-
                 // create img element
                 $strPict = sprintf('<img src="%s" alt="%s">',
                     htmlspecialcharsEx($arItem["PREVIEW_PICTURE"]["SRC"]),

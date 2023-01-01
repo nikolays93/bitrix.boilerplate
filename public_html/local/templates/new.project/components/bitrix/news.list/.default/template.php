@@ -34,23 +34,21 @@ $this->setFrameMode(true);
     ?>
     <div class="<?= $arResult['VAR']['ROW_CLASS'] ?>">
         <?php foreach ($arResult["ITEMS"] as $arItem): ?>
-            <div class="<?= $arItem['VAR']['COLUMN_CLASS'] ?>" id="<?= $arItem['EDIT_AREA_ID'] ?>">
-                <article class="<?= $arItem['VAR']['ARTICLE_CLASS'] ?>">
-                    <?= $arItem['ACTION']['BEFORE_ARTICLE_BODY'] ?>
-                    <div class="media-body <?= $arParams['ITEM_CLASS'] ?>__body">
-                        <?php
+            <article class="<?= $arItem['VAR']['ARTICLE_CLASS'] ?>" id="<?= $arItem['EDIT_AREA_ID'] ?>">
+                <?= $arItem['ACTION']['BEFORE_ARTICLE_BODY'] ?>
+                <div class="media-body <?= $arParams['ITEM_CLASS'] ?>__body">
+                    <?php
 
-                        /**
-                         * Show elements by SORT_ELEMENTS param include: PICT, NAME, DESC, MORE, DATE, SECT
-                         * You may use <?= $PICT ?> instead this function
-                         */
-                        $arItem['VAR']['SHOW_ELEMENTS']();
+                    /**
+                     * Show elements by SORT_ELEMENTS param include: PICT, NAME, DESC, MORE, DATE, SECT
+                     * You may use <?= $PICT ?> instead this function
+                     */
+                    $arItem['VAR']['SHOW_ELEMENTS']();
 
-                        ?>
-                    </div>
-                    <?= $arItem['ACTION']['AFTER_ARTICLE_BODY'] ?>
-                </article>
-            </div>
+                    ?>
+                </div>
+                <?= $arItem['ACTION']['AFTER_ARTICLE_BODY'] ?>
+            </article>
         <? endforeach ?>
     </div><!-- .<?= $arResult['VAR']['ROW_CLASS'] ?> -->
     <?php

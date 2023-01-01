@@ -16,10 +16,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
 $this->setFrameMode(true);
 
-extract($arResult['VAR']);
-
 ?>
-<section class='<?= $SECTION_CLASS ?>'>
+<section class='<?= $arResult['VAR']['SECTION_CLASS'] ?>'>
     <?php
 
     if ("Y" == $arParams['LAZY_LOAD'] && !empty($_GET['LAZY_LOAD'])) {
@@ -34,10 +32,10 @@ extract($arResult['VAR']);
     // }
 
     ?>
-    <div class="<?= $ROW_CLASS ?>">
-        <?php foreach ($arResult["ITEMS"] as $arItem): extract($arItem['VAR']) ?>
-            <div class="<?= $COLUMN_CLASS ?>" id="<?= $COLUMN_ID ?>">
-                <article class="<?= $ARTICLE_CLASS ?>">
+    <div class="<?= $arResult['VAR']['ROW_CLASS'] ?>">
+        <?php foreach ($arResult["ITEMS"] as $arItem): ?>
+            <div class="<?= $arItem['VAR']['COLUMN_CLASS'] ?>" id="<?= $arItem['VAR']['COLUMN_ID'] ?>">
+                <article class="<?= $arItem['VAR']['ARTICLE_CLASS'] ?>">
                     <?= $arItem['ACTION']['BEFORE_ARTICLE_BODY'] ?>
                     <div class="media-body <?= $arParams['ITEM_CLASS'] ?>__body">
                         <?php
@@ -46,7 +44,7 @@ extract($arResult['VAR']);
                          * Show elements by SORT_ELEMENTS param include: PICT, NAME, DESC, MORE, DATE, SECT
                          * You may use <?= $PICT ?> instead this function
                          */
-                        $SHOW_ELEMENTS();
+                        $arItem['VAR']['SHOW_ELEMENTS']();
 
                         ?>
                     </div>
@@ -54,7 +52,7 @@ extract($arResult['VAR']);
                 </article>
             </div>
         <? endforeach ?>
-    </div><!-- .<?= $ROW_CLASS ?> -->
+    </div><!-- .<?= $arResult['VAR']['ROW_CLASS'] ?> -->
     <?php
 
     if ($arParams["DISPLAY_BOTTOM_PAGER"]) {

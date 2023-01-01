@@ -1,0 +1,10 @@
+/data/
+/docker/
+.env*
+docker-compose.yml
+/bitrix/
+/upload/
+/vendor/
+/public_html/upload
+/public_html/bitrix
+*.lock

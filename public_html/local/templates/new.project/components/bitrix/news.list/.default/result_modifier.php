@@ -42,6 +42,150 @@ if ($cp = $this->getComponent()) {
     $cp->SetResultCacheKeys(array('SECTION_CLASS'));
 }
 
+if (!class_exists('CBitrixNewsItemTemplate')):
+    class CBitrixNewsItemTemplate
+    {
+        public $arParams;
+        public $arItem;
+
+        public function __construct($arParams, $arItem)
+        {
+            $this->arParams = $arParams;
+            $this->arItem = $arItem;
+        }
+
+        public function getPicture()
+        {
+            $strPict = '';
+            $strPictURL = isset($this->arParams['PICTURE_URL']) && "DETAIL_PICTURE" === $this->arParams['PICTURE_URL'] ?
+                htmlspecialcharsEx($this->arItem["DETAIL_PICTURE"]["SRC"]) : $this->arItem['DETAIL_PAGE_URL'];
+
+            if (!empty($this->arItem["PREVIEW_PICTURE"]["SRC"])) {
+                // create img element
+                $strPict = sprintf('<img src="%s" alt="%s">',
+                    htmlspecialcharsEx($this->arItem["PREVIEW_PICTURE"]["SRC"]),
+                    htmlspecialcharsEx($this->arItem["NAME"])
+                );
+
+                if (strlen($strPictURL) > 2) {
+                    // wrap to link
+                    $strPict = sprintf('<a href="%s"%s>%s</a>',
+                        $strPictURL,
+                        "DETAIL_PICTURE" !== $this->arParams['PICTURE_URL'] ? $this->arItem['LINK_ATTRS'] : '',
+                        $strPict
+                    );
+                }
+            }
+
+            // wrap to module box
+            return sprintf('<div class="%s">%s</div>',
+                htmlspecialcharsEx($this->arParams['ITEM_CLASS']) . '__pict',
+                $strPict
+            );
+        }
+
+        public function getName()
+        {
+            $strNameClass = $this->arParams['ITEM_CLASS'] . '__name';
+
+            if (strlen($this->arItem['DETAIL_PAGE_URL']) > 2) {
+                // wrap to module with link
+                return sprintf('<a href="%4$s" class="%3$s d-block"%5$s><%1$s>%2$s</%1$s></a>',
+                    htmlspecialcharsEx($this->arParams["NAME_TAG"]),
+                    $this->arItem["NAME"], // strip_tags?
+                    htmlspecialcharsEx($strNameClass),
+                    $this->arItem['DETAIL_PAGE_URL'],
+                    $this->arItem['LINK_ATTRS']
+                );
+            } else {
+                // wrap to module box
+                return sprintf('<%1$s class="%3$s">%2$s</%1$s>',
+                    htmlspecialcharsEx($this->arParams["NAME_TAG"]),
+                    $this->arItem["NAME"], // strip_tags?
+                    htmlspecialcharsEx($this->arParams['ITEM_CLASS'] . '__name')
+                );
+            }
+        }
+
+        public function getDate()
+        {
+            $date = $this->arItem["DISPLAY_ACTIVE_FROM"] ? strip_tags($this->arItem["DISPLAY_ACTIVE_FROM"]) : '';
+
+            // wrap to module box
+            return sprintf('<div class="%s__date">%s</div>',
+                htmlspecialcharsEx($this->arParams['ITEM_CLASS']),
+                $date
+            );
+        }
+
+        function getDescription()
+        {
+            $text = $this->arItem["PREVIEW_TEXT"] ? $this->arItem["PREVIEW_TEXT"] : '';
+
+            // wrap to module box
+            return sprintf('<div class="%s__desc">%s</div>',
+                htmlspecialcharsEx($this->arParams['ITEM_CLASS']),
+                $text
+            );
+        }
+
+        public function getMoreLink()
+        {
+            $this->arItem['MORE_LINK_TEXT'] = $this->arParams["MORE_LINK_TEXT"];
+
+            if (empty($this->arItem["MORE_LINK_TEXT"])) return '';
+            if ("Y" === $this->arParams["HIDE_LINK_WHEN_NO_DETAIL"] || empty($this->arItem["DETAIL_TEXT"])) return '';
+
+            if (strlen($this->arItem['DETAIL_PAGE_URL']) > 2) {
+                return sprintf('<div class="%1$s__more"><a class="btn" href="%2$s"%3$s>%4$s</a></div>',
+                    htmlspecialcharsEx($this->arParams['ITEM_CLASS']),
+                    $this->arItem['DETAIL_PAGE_URL'],
+                    $this->arItem['LINK_ATTRS'],
+                    $this->arItem["MORE_LINK_TEXT"]
+                );
+            }
+
+            return '';
+        }
+
+        function getSectionName()
+        {
+            if (empty($this->arItem['IBLOCK_SECTION_ID'])) return '';
+
+            // Get section name by id
+            $arSection = \Bitrix\Iblock\SectionTable::getList(array(
+                'select' => array('ID', 'NAME'),
+                'filter' => array('=ID' => $this->arItem['IBLOCK_SECTION_ID']),
+            ))->fetch();
+
+            $strSectName = $arSection['NAME'] ? strip_tags($arSection['NAME']) : '';
+
+            return sprintf('<div class="%s__sect">%s</div>',
+                htmlspecialcharsEx($this->arParams['ITEM_CLASS']),
+                $strSectName
+            );
+        }
+
+        function getProperties()
+        {
+            $properties = [];
+            foreach ($this->arItem['DISPLAY_PROPERTIES'] as $propCode => $arProperty) {
+                if (is_array($arProperty['VALUE'])) {
+                    $arProperty['VALUE'] = implode(', ', $arProperty['VALUE']);
+                }
+
+                $properties[] = sprintf('<div class="%1$s__prop %1$s-prop %1$s-prop__%2$s">%3$s</div>',
+                    htmlspecialcharsEx($this->arParams['ITEM_CLASS']),
+                    htmlspecialcharsEx(strtolower($propCode)),
+                    $arProperty['VALUE']
+                );
+            }
+
+            return $properties;
+        }
+    }
+endif;
+
 foreach ($arResult["ITEMS"] as &$arItem) {
     // add edit areas
     $this->AddEditAction(
@@ -84,142 +228,6 @@ foreach ($arResult["ITEMS"] as &$arItem) {
     }
 
     $arItem['EDIT_AREA_ID'] = $this->GetEditAreaId($arItem['ID']);
-
-    /** @var array HTML entities */
-    $arItem['VAR'] = array(
-        'PICT' => function() use ($arParams, &$arItem) {
-            $strPict = '';
-            $strPictURL = isset($arParams['PICTURE_URL']) && "DETAIL_PICTURE" === $arParams['PICTURE_URL'] ?
-                htmlspecialcharsEx($arItem["DETAIL_PICTURE"]["SRC"]) : $arItem['DETAIL_PAGE_URL'];
-
-            if (!empty($arItem["PREVIEW_PICTURE"]["SRC"])) {
-                // create img element
-                $strPict = sprintf('<img src="%s" alt="%s">',
-                    htmlspecialcharsEx($arItem["PREVIEW_PICTURE"]["SRC"]),
-                    htmlspecialcharsEx($arItem["NAME"])
-                );
-
-                if (strlen($strPictURL) > 2) {
-                    // wrap to link
-                    $strPict = sprintf('<a href="%s"%s>%s</a>',
-                        $strPictURL,
-                        "DETAIL_PICTURE" !== $arParams['PICTURE_URL'] ? $arItem['LINK_ATTRS'] : '',
-                        $strPict
-                    );
-                }
-            }
-
-            // wrap to module box
-            return sprintf('<div class="%s">%s</div>',
-                htmlspecialcharsEx($arParams['ITEM_CLASS']) . '__pict',
-                $strPict
-            );
-        },
-
-        'NAME' => function() use ($arParams, $arItem) {
-            $strNameClass = $arParams['ITEM_CLASS'] . '__name';
-
-            if( strlen($arItem['DETAIL_PAGE_URL']) > 2 ) {
-                // wrap to module with link
-                return sprintf('<a href="%4$s" class="%3$s d-block"%5$s><%1$s>%2$s</%1$s></a>',
-                    htmlspecialcharsEx($arParams["NAME_TAG"]),
-                    $arItem["NAME"], // strip_tags?
-                    htmlspecialcharsEx($strNameClass),
-                    $arItem['DETAIL_PAGE_URL'],
-                    $arItem['LINK_ATTRS']
-                );
-            }
-            else {
-                // wrap to module box
-                return sprintf('<%1$s class="%3$s">%2$s</%1$s>',
-                    htmlspecialcharsEx($arParams["NAME_TAG"]),
-                    $arItem["NAME"], // strip_tags?
-                    htmlspecialcharsEx($arParams['ITEM_CLASS'] . '__name')
-                );
-            }
-        },
-
-        'DATE' => function() use ($arParams, $arItem) {
-            $date = $arItem["DISPLAY_ACTIVE_FROM"] ? strip_tags($arItem["DISPLAY_ACTIVE_FROM"]) : '';
-
-            // wrap to module box
-            return sprintf('<div class="%s__date">%s</div>',
-                htmlspecialcharsEx($arParams['ITEM_CLASS']),
-                $date
-            );
-        },
-
-        'DESC' => function() use ($arParams, $arItem) {
-            $text = $arItem["PREVIEW_TEXT"] ? $arItem["PREVIEW_TEXT"] : '';
-
-            // wrap to module box
-            return sprintf('<div class="%s__desc">%s</div>',
-                htmlspecialcharsEx($arParams['ITEM_CLASS']),
-                $text
-            );
-        },
-        // @TODO: check element class
-        'MORE' => function() use ($arParams, $arItem) {
-            /**
-             * @todo in future
-             */
-            $arItem['MORE_LINK_TEXT'] = $arParams["MORE_LINK_TEXT"];
-            // if( !empty($arItem['PROPERTIES'][ $arParams['EXTERNAL_LINK_PROPERTY'] ]['VALUE']) ) {
-            //     $arItem['DETAIL_PAGE_URL'] = $arItem['PROPERTIES'][ $arParams['EXTERNAL_LINK_PROPERTY'] ]['VALUE'];
-            //     $arItem['MORE_LINK_TEXT'] = 'Читать в источнике';
-            // }
-
-            if( empty($arItem["MORE_LINK_TEXT"]) ) return '';
-            if( "Y" === $arParams["HIDE_LINK_WHEN_NO_DETAIL"] || empty($arItem["DETAIL_TEXT"]) ) return '';
-
-            if( strlen($arItem['DETAIL_PAGE_URL']) > 2 ) {
-                return sprintf('<div class="%1$s__more"><a class="btn" href="%2$s"%3$s>%4$s</a></div>',
-                    htmlspecialcharsEx($arParams['ITEM_CLASS']),
-                    $arItem['DETAIL_PAGE_URL'],
-                    $arItem['LINK_ATTRS'],
-                    $arItem["MORE_LINK_TEXT"]
-                );
-            }
-
-            return '';
-        },
-
-        'SECT' => function() use ($arParams, $arItem) {
-            if (empty($arItem['IBLOCK_SECTION_ID'])) return '';
-
-            // Get section name by id
-            $arSection = \Bitrix\Iblock\SectionTable::getList(array(
-                'select' => array('ID', 'NAME'),
-                'filter' => array('=ID' => $arItem['IBLOCK_SECTION_ID']),
-            ))->fetch();
-
-            $strSectName = $arSection['NAME'] ? strip_tags($arSection['NAME']) : '';
-
-            return sprintf('<div class="%s__sect">%s</div>',
-                htmlspecialcharsEx($arParams['ITEM_CLASS']),
-                $strSectName
-            );
-        },
-    );
-
-    /**
-     * Properties
-     */
-    foreach ($arItem['DISPLAY_PROPERTIES'] as $propCode => $arProperty) {
-        if( is_array($arProperty['VALUE']) ) {
-            $arProperty['VALUE'] = implode(', ', $arProperty['VALUE']);
-        }
-
-        if($arItem["PREVIEW_TEXT"]) {
-            $arItem["VAR"]['PROP_' . $propCode] = $arProperty['VALUE'];
-        }
-
-        $arItem["VAR"]['PROP_' . $propCode] = sprintf('<div class="%1$s__prop %1$s-prop %1$s-prop__%2$s">%3$s</div>',
-            htmlspecialcharsEx($arParams['ITEM_CLASS']),
-            htmlspecialcharsEx(strtolower($propCode)),
-            $arItem["VAR"]['PROP_' . $propCode]
-        );
-    }
 
     if (strlen($arItem['DETAIL_PAGE_URL']) > 2 && $arParams['USE_GLOBAL_LINK']) {
         $arItem['ACTION']['AFTER_ARTICLE_BODY'] .= "\r\n"

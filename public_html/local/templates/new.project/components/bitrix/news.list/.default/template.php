@@ -33,16 +33,17 @@ $this->setFrameMode(true);
 
     ?>
     <div class="<?= $arResult['VAR']['ROW_CLASS'] ?>">
-        <?php foreach ($arResult["ITEMS"] as $arItem): ?>
+        <?php foreach ($arResult["ITEMS"] as $arItem):
+            $arItemTemplate = new CBitrixNewsItemTemplate($arParams, $arItem); ?>
             <article class="<?= $arParams['ITEM_CLASS'] ?>" id="<?= $arItem['EDIT_AREA_ID'] ?>">
-                <?= $arItem['VAR']['PICT']() ?>
+                <?= $arItemTemplate->getPicture() ?>
 
                 <div class="media-body <?= $arParams['ITEM_CLASS'] ?>__body">
-                    <?= $arItem['VAR']['NAME']() ?>
-                    <?= $arItem['VAR']['DESC']() ?>
-                    <?= $arItem['VAR']['MORE']() ?>
-                    <?= $arItem['VAR']['DATE']() ?>
-                    <?= $arItem['VAR']['SECT']() ?>
+                    <?= $arItemTemplate->getName(); ?>
+                    <?= $arItemTemplate->getDescription(); ?>
+                    <?= $arItemTemplate->getMoreLink(); ?>
+                    <?= $arItemTemplate->getDate(); ?>
+                    <?= $arItemTemplate->getSectionName(); ?>
                 </div>
                 <?= $arItem['ACTION']['AFTER_ARTICLE_BODY'] ?>
             </article>

@@ -1,8 +1,14 @@
-<? if ( ! defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
+<?php
+/**
+ * @var CMain $APPLICATION
+ * @var array $arParams
+ * @var array $arResult
+ */
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
-if ("Y" == $arParams['LAZY_LOAD'] && ! empty($_GET['LAZY_LOAD'])) {
+if ("Y" == $arParams['LAZY_LOAD'] && !empty($_GET['LAZY_LOAD'])) {
     $content = ob_get_contents();
     ob_end_clean();
 
@@ -16,28 +22,26 @@ if ("Y" == $arParams['LAZY_LOAD'] && ! empty($_GET['LAZY_LOAD'])) {
 if ("Y" == $arParams['LAZY_LOAD']):?>
     <script type="text/javascript">
         jQuery(document).ready(function ($) {
-            var $section = $('.<?= implode('.', explode(' ', $arResult['SECTION_CLASS'])) ?>'),
-                wrapperClass = '.<?= implode('.', explode(' ', $arParams['ROW_CLASS'])) ?>',
-                $wrapper = $(wrapperClass, $section),
+            var $section = $('.<?= implode('.', explode(' ', $arResult['SECTION_CLASS'])) ?>');
+            var wrapperClass = '.<?= implode('.', explode(' ', $arParams['ROW_CLASS'])) ?>';
+            var $wrapper = $(wrapperClass, $section);
 
-                ajaxPagerLoadingTpl = ['<span class="ajax-pager-loading">',
-                    'Загрузка…',
-                    '</span>'].join(''),
-                ajaxBusy = false;
+            var ajaxPagerLoadingTpl = '<span class="ajax-pager-loading">Загрузка…</span>';
+            var ajaxBusy = false;
 
-            <?if("Y" == $arParams['INFINITY_SCROLL']):?>
+            <?php if("Y" == $arParams['INFINITY_SCROLL']):?>
             var $window = $(window);
             $window.on('scroll', function () {
                 var wrapperOffsetBottom = $wrapper.offset().top + $wrapper.height();
                 var windowOffsetBottom = $window.scrollTop() + $window.height();
 
                 if (windowOffsetBottom > wrapperOffsetBottom && !ajaxBusy) {
-                    $('.more-items-link').trigger('click');
+                    $("[data-more]", $section).trigger('click');
                 }
             });
-            <?endif?>
+            <?php endif?>
 
-            $(document).on('click', '.more-items-link', function (event) {
+            $section.on('click', "[data-more]", function (event) {
                 event.preventDefault();
                 ajaxBusy = true;
 
@@ -50,8 +54,10 @@ if ("Y" == $arParams['LAZY_LOAD']):?>
                     $wrapper = $(wrapperClass, $section);
 
                     $new.each(function (index, el) {
-                        if ($(el).hasClass('row')) {
-                            $(el).prepend($wrapper.html());
+                        var $el = $(el);
+
+                        if ($el.hasClass('row')) {
+                            $el.prepend($wrapper.html());
                         }
                     });
 
@@ -64,4 +70,4 @@ if ("Y" == $arParams['LAZY_LOAD']):?>
             });
         });
     </script>
-<? endif ?>
+<?php endif ?>

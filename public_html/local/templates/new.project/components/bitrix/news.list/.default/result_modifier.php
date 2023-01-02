@@ -24,9 +24,9 @@ if (empty($arParams["NAME_TAG"])) $arParams["NAME_TAG"] = 'h3';
 
 // define list class
 $arSectionClass = array('news-list');
-if ( ! empty($arParams['ITEM_CLASS']))  $arSectionClass[] = $arParams['ITEM_CLASS'] . "-list";
-if ( ! empty($arParams['IBLOCK_CODE'])) $arSectionClass[] = "news-list_type_" . $arParams['IBLOCK_CODE'];
-if ( ! empty($arParams['IBLOCK_ID']))   $arSectionClass[] = "news-list_id_" . $arParams['IBLOCK_ID'];
+if (!empty($arParams['ITEM_CLASS'])) $arSectionClass[] = $arParams['ITEM_CLASS'] . "-list";
+if (!empty($arParams['IBLOCK_CODE'])) $arSectionClass[] = "news-list_type_" . $arParams['IBLOCK_CODE'];
+if (!empty($arParams['IBLOCK_ID'])) $arSectionClass[] = "news-list_id_" . $arParams['IBLOCK_ID'];
 
 $arResult['VAR']['SECTION_CLASS'] = implode(' ', $arSectionClass);
 
@@ -231,7 +231,7 @@ foreach ($arResult["ITEMS"] as &$arItem) {
 
     if (strlen($arItem['DETAIL_PAGE_URL']) > 2 && $arParams['USE_GLOBAL_LINK']) {
         $arItem['ACTION']['AFTER_ARTICLE_BODY'] .= "\r\n"
-          . sprintf('<a href="%s" class="global-link"%s></a>',
+            . sprintf('<a href="%s" class="global-link"%s></a>',
                 $arItem['DETAIL_PAGE_URL'],
                 $arItem['LINK_ATTRS']
             );

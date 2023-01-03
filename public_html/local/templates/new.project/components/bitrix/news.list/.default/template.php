@@ -33,21 +33,23 @@ $this->setFrameMode(true);
 
     ?>
     <div class="<?= $arResult['VAR']['ROW_CLASS'] ?>">
-        <?php foreach ($arResult["ITEMS"] as $arItem):
-            $arItemTemplate = new CBitrixNewsItemTemplate($arParams, $arItem); ?>
-            <article class="<?= $arParams['ITEM_CLASS'] ?>" id="<?= $arItem['EDIT_AREA_ID'] ?>">
-                <?= $arItemTemplate->getPicture() ?>
+        <?php
 
-                <div class="media-body <?= $arParams['ITEM_CLASS'] ?>__body">
-                    <?= $arItemTemplate->getName(); ?>
-                    <?= $arItemTemplate->getDescription(); ?>
-                    <?= $arItemTemplate->getMoreLink(); ?>
-                    <?= $arItemTemplate->getDate(); ?>
-                    <?= $arItemTemplate->getSectionName(); ?>
-                </div>
-                <?= $arItem['ACTION']['AFTER_ARTICLE_BODY'] ?>
-            </article>
-        <? endforeach ?>
+        foreach ($arResult["ITEMS"] as $arItem):
+            $APPLICATION->IncludeComponent(
+                "bitrix:catalog.item",
+                "news",
+                array(
+                    'RESULT' => [
+                        'ITEM' => $arItem,
+                    ],
+                    'PARAMS' => $arParams,
+                ),
+                $component
+            );
+        endforeach;
+
+        ?>
     </div><!-- .<?= $arResult['VAR']['ROW_CLASS'] ?> -->
     <?php
 

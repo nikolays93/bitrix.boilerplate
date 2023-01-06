@@ -32,7 +32,7 @@ $this->setFrameMode(true);
     // }
 
     ?>
-    <div class="<?= $arResult['VAR']['ROW_CLASS'] ?>">
+    <div class="<?= $arParams['ROW_CLASS'] ?>">
         <?php
 
         foreach ($arResult["ITEMS"] as $arItem):

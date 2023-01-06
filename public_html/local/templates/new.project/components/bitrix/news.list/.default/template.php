@@ -54,7 +54,7 @@ $this->setFrameMode(true);
     <?php
 
     if ($arParams["DISPLAY_BOTTOM_PAGER"]) {
-        printf('<div class="%1$s_%2$s__pager %1$s_%2$__pager_bottom">%3$s</div>',
+        printf('<div class="%1$s_%2$s__pager %1$s_%2$s__pager_bottom">%3$s</div>',
             $arParams['IBLOCK_CODE'],
             $arParams['ITEM_CLASS'],
             $arResult["NAV_STRING"]

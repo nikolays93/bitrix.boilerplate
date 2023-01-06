@@ -21,6 +21,7 @@ if (empty($arParams['COLUMNS'])) $arParams['COLUMNS'] = 1;
 $arResult['VAR']['ROW_CLASS'] = !empty($arParams['ROW_CLASS']) ? $arParams['ROW_CLASS'] : 'row';
 if (empty($arParams['ITEM_CLASS'])) $arParams['ITEM_CLASS'] = 'item';
 if (empty($arParams["NAME_TAG"])) $arParams["NAME_TAG"] = 'h3';
+if (empty($arParams['ITEM_TEMPLATE'])) $arParams["ITEM_TEMPLATE"] = 'news';
 
 // define list class
 $arSectionClass = array('news-list');

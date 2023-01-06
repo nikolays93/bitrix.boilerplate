@@ -38,7 +38,7 @@ $this->setFrameMode(true);
         foreach ($arResult["ITEMS"] as $arItem):
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.item",
-                "news",
+                $arParams["ITEM_TEMPLATE"],
                 array(
                     'RESULT' => [
                         'ITEM' => $arItem,

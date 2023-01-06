@@ -107,4 +107,9 @@ $arTemplateParameters = array(
         "TYPE"    => "CHECKBOX",
         "DEFAULT" => "N",
     ),
+    "ITEM_TEMPLATE" => Array(
+        "NAME"    => 'Шаблон элемента в списке',
+        "TYPE"    => "text",
+        "DEFAULT" => "news",
+    ),
 );

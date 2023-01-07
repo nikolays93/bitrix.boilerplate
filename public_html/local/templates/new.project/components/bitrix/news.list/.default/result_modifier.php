@@ -5,6 +5,7 @@
  * @var array $arParams
  * @var array $arResult
  */
+
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
@@ -29,7 +30,7 @@ if (!empty($arParams['ITEM_CLASS'])) $arSectionClass[] = $arParams['ITEM_CLASS']
 if (!empty($arParams['IBLOCK_CODE'])) $arSectionClass[] = "news-list_type_" . $arParams['IBLOCK_CODE'];
 if (!empty($arParams['IBLOCK_ID'])) $arSectionClass[] = "news-list_id_" . $arParams['IBLOCK_ID'];
 
-$arResult['VAR']['SECTION_CLASS'] = implode(' ', $arSectionClass);
+$arResult['SECTION_CLASS'] = implode(' ', $arSectionClass);
 
 /**
  * Transfer to epilogue

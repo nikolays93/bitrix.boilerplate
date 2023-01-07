@@ -17,7 +17,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 $this->setFrameMode(true);
 
 ?>
-<section class='<?= $arResult['VAR']['SECTION_CLASS'] ?>'>
+<section class='<?= $arResult['SECTION_CLASS'] ?>'>
     <?php
 
     if ("Y" == $arParams['LAZY_LOAD'] && !empty($_GET['LAZY_LOAD'])) {
